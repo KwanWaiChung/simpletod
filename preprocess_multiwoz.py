@@ -505,9 +505,10 @@ def createDelexData():
 
 def loadDataMultiWoz():
     data_url = os.path.join(DATA_DIR, 'multi-woz-2.1/data.json')
-    dataset_url = "https://www.repository.cam.ac.uk/bitstream/handle/1810/294507/MULTIWOZ2.1.zip?sequence=1&isAllowed=y"
+    # dataset_url = "https://www.repository.cam.ac.uk/bitstream/handle/1810/294507/MULTIWOZ2.1.zip?sequence=1&isAllowed=y"
+    dataset_url = "https://github.com/budzianowski/multiwoz/raw/master/data/MultiWOZ_2.1.zip"
     download_path = os.path.join(DATA_DIR, 'multi-woz')
-    extract_path = os.path.join(download_path, 'MULTIWOZ2.1')
+    extract_path = os.path.join(download_path, 'MultiWOZ_2.1') # changed
     os.makedirs(download_path, exist_ok=True)
 
     if not os.path.exists(data_url):
