@@ -20,7 +20,7 @@ opt.use_knowledge = True
 opt.context_knowledge = True
 opt.lexical = True
 
-
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 HISTORY_LEN = None
 # USE_ORACLE_BELIEF = True
 USE_ORACLE_BELIEF = True
@@ -80,7 +80,7 @@ def predict(text: str) -> str:
     tokens_tensor = torch.tensor([indexed_tokens])
 
     # If you have a GPU, put everything on cuda
-    tokens_tensor = tokens_tensor.to("cuda")
+    tokens_tensor = tokens_tensor.to(DEVICE)
     predicted_index = indexed_tokens[-1]
 
     with torch.no_grad():
@@ -136,7 +136,7 @@ def predict(text: str) -> str:
                         )
                         truncate_action = True
 
-                tokens_tensor = torch.tensor([indexed_tokens]).to("cuda")
+                tokens_tensor = torch.tensor([indexed_tokens]).to(DEVICE)
                 if len(indexed_tokens) > MAX_LEN:
                     break
                 if tokenizer.decode(indexed_tokens).endswith(
@@ -161,7 +161,7 @@ for model_checkpoint in ckpts:
     tokenizer = GPT2Tokenizer.from_pretrained(model_checkpoint)
     model = GPT2LMHeadModel.from_pretrained(model_checkpoint)
     model.eval()
-    model.to("cuda")
+    model.to(DEVICE)
     break_tokens = tokenizer.encode(tokenizer.eos_token)
     MAX_LEN = model.config.n_ctx
 

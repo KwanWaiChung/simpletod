@@ -20,7 +20,7 @@ pricepat2 = re.compile("\d{1,3}[.]\d{1,2}")
 
 # PATH = './utils/multiwoz'
 # ROOT = '/home/ehosseiniasl/github_repos/ehsan-scratchpad/dialogue'
-PATH = './resources/multi-woz/MULTIWOZ2.1'
+PATH = './resources/multi-woz//MultiWOZ_2.1'
 
 def prepareSlotValuesIndependent():
     domains = ['restaurant', 'hotel', 'attraction', 'train', 'taxi', 'hospital', 'police']
