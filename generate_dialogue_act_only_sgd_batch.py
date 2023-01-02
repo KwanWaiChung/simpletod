@@ -11,13 +11,18 @@ import json
 import ipdb
 import sys
 import os
+import argparse
 
-opt = ArgsParser().parse()
-opt.multiwoz_version = "2.1"
-opt.use_action = True
-opt.use_knowledge = True
-opt.context_knowledge = True
-opt.lexical = True
+parser = argparse.ArgumentParser()
+parser.add_argument("--split_set", type=str, default="test")
+parser.add_argument("--checkpoint", type=str)
+parser.add_argument(
+    "--all",
+    help="Evaluate all checkpoints and return max one",
+    action="store_true",
+)
+args = parser.parse_args()
+
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 HISTORY_LEN = None
@@ -28,10 +33,7 @@ USE_ORACLE_ACTION = False
 USE_DB_SEARCH = False  # doesn't matter. Only used for response
 USE_DYNAMIC_DB = False
 # EVAL_SPLIT = 'test'
-EVAL_SPLIT = opt.split_set
-decoding = opt.decoding
-opt_delex = ArgsParser().parse()
-opt_delex.multiwoz_version = "2.1"
+EVAL_SPLIT = args.split_set
 bz = 32
 
 assert EVAL_SPLIT in [
@@ -76,13 +78,14 @@ def get_action(sent):
     return new_action
 
 
-model_checkpoint = opt.checkpoint
-parent_dir = "output/sgd-distilgpt2"
-ckpts = [
-    os.path.join(parent_dir, name)
-    for name in os.listdir(parent_dir)
-    if name.startswith("checkpoint")
-]
+ckpts = [args.checkpoint]
+if args.all:
+    parent_dir = "output/sgd-distilgpt2"
+    ckpts = [
+        os.path.join(parent_dir, name)
+        for name in os.listdir(parent_dir)
+        if name.startswith("checkpoint")
+    ]
 data = (
     open(f"resources/sgd_0_1_simpletod/{EVAL_SPLIT}_sgd", "r")
     .read()
